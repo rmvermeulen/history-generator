@@ -23,7 +23,7 @@ export const DAYS_PER_WEEK = 6
 export const WEEKS_PER_YEAR = WEEKS_PER_MONTH * MONTHS_PER_YEAR
 export const DAYS_PER_MONTH = DAYS_PER_WEEK * WEEKS_PER_MONTH
 export const DAYS_PER_YEAR = DAYS_PER_MONTH * MONTHS_PER_YEAR
-export const enum MONTH_NAMES {
+export enum MONTH_NAMES {
   'janumon' = 1,
   'febumon',
   'marmon',
@@ -36,13 +36,26 @@ export const enum MONTH_NAMES {
   'decemon'
 }
 
-export const enum DAYS_NAMES {
+export enum DAY_NAMES {
   'ada' = 1,
   'beda',
   'ceda',
   'doda',
   'eda',
   'goda'
+}
+export const extendAge = (age: Age): string =>
+  JSON.stringify(
+    { ...age, day: DAY_NAMES[age.days], month: MONTH_NAMES[age.months] },
+    null,
+    2
+  )
+
+export const toAgeString = (age: Age) => {
+  const day = DAY_NAMES[age.days]
+  const month = MONTH_NAMES[age.months]
+  const monthDays = age.days + age.weeks * WEEKS_PER_MONTH
+  return `${day}, ${monthDays} ${month} of ${age.years}`
 }
 
 const { floor } = Math

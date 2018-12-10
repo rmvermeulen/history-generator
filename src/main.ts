@@ -1,7 +1,7 @@
+import * as R from 'ramda'
 import { createStore } from 'redux'
 import * as S from 'sanctuary'
-import * as R from 'ramda'
-import { passTime, Age, TimeUnit } from './age'
+import { Age, passTime, TimeUnit, toAgeString } from './age'
 
 interface State {
   age: Age
@@ -38,5 +38,26 @@ const store = createStore(rootReducer)
 
 store.dispatch({
   type: 'PASS TIME',
-  value: [100, 'days']
+  value: [25e5, 'days']
 })
+console.log(toAgeString(store.getState().age))
+store.dispatch({
+  type: 'PASS TIME',
+  value: [1238, 'years']
+})
+console.log(toAgeString(store.getState().age))
+store.dispatch({
+  type: 'PASS TIME',
+  value: [123, 'months']
+})
+console.log(toAgeString(store.getState().age))
+store.dispatch({
+  type: 'PASS TIME',
+  value: [4, 'weeks']
+})
+console.log(toAgeString(store.getState().age))
+store.dispatch({
+  type: 'PASS TIME',
+  value: [7463, 'days']
+})
+console.log(toAgeString(store.getState().age))
