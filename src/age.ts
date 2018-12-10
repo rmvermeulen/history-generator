@@ -1,5 +1,6 @@
 import R from 'ramda'
 import S from 'sanctuary'
+import capitalize = require('capitalize')
 
 export class Age {
   years: number = 0
@@ -8,12 +9,16 @@ export class Age {
   days: number = 1
   protected constructor() {}
   static create(options: Partial<Age> = {}): Age {
-    const age = new Age()
-    age.years = options.years || 0
-    age.months = options.months || 1
-    age.weeks = options.weeks || 1
-    age.days = options.days || 1
-    return age
+    return R.pipe(
+      // years are 0 indexed
+      passYears(options.years || 0),
+      // months are 1 indexed
+      passMonths((options.months || 1) - 1),
+      // weeks are 1 indexed
+      passWeeks((options.weeks || 1) - 1),
+      // days are 1 indexed
+      passDays((options.days || 1) - 1)
+    )(new Age())
   }
 }
 
@@ -46,8 +51,8 @@ export enum DAY_NAMES {
 }
 
 export const toAgeString = (age: Age) => {
-  const day = DAY_NAMES[age.days]
-  const month = MONTH_NAMES[age.months]
+  const day = capitalize(DAY_NAMES[age.days])
+  const month = capitalize(MONTH_NAMES[age.months])
   const monthDays = age.days + age.weeks * WEEKS_PER_MONTH
   return `${day}, ${monthDays} ${month} of ${age.years}`
 }
