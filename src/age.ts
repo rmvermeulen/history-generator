@@ -1,5 +1,5 @@
-import S from 'sanctuary'
 import R from 'ramda'
+import S from 'sanctuary'
 
 export class Age {
   years: number = 0
@@ -44,18 +44,16 @@ export enum DAY_NAMES {
   'eda',
   'goda'
 }
-export const extendAge = (age: Age): string =>
-  JSON.stringify(
-    { ...age, day: DAY_NAMES[age.days], month: MONTH_NAMES[age.months] },
-    null,
-    2
-  )
 
 export const toAgeString = (age: Age) => {
   const day = DAY_NAMES[age.days]
   const month = MONTH_NAMES[age.months]
   const monthDays = age.days + age.weeks * WEEKS_PER_MONTH
   return `${day}, ${monthDays} ${month} of ${age.years}`
+}
+
+export const fromAgeString = (_age: Age) => {
+  throw new Error('Not implemented')
 }
 
 const { floor } = Math
@@ -69,10 +67,10 @@ const addBounded = S.curry2((mod: number, amount: number) =>
   )
 )
 
-export const passYears = S.curry2((amount: number, age: Age) => ({
-  ...age,
-  years: age.years + amount
-}))
+export const passYears = (amount: number): ((age: Age) => Age) =>
+  R.evolve({
+    years: R.add(amount)
+  })
 
 export const passMonths = (amount: number): ((age: Age) => Age) =>
   R.pipe(
@@ -124,3 +122,23 @@ export type Month = 'month' | 'months'
 export type Week = 'week' | 'weeks'
 export type Day = 'day' | 'days'
 export type TimeUnit = Week | Month | Year | Day
+
+export const totalMonths = (age: Age) => {
+  return age.years * MONTHS_PER_YEAR + age.months
+}
+export const totalWeeks = (age: Age) => {
+  return totalMonths(age) * WEEKS_PER_MONTH + age.weeks
+}
+export const totalDays = (age: Age) => {
+  return totalWeeks(age) * DAYS_PER_WEEK + age.days
+}
+
+/** check the second age is _before_ the first age */
+export const isBefore = S.curry2(
+  (before: Age, age: Age) => totalDays(age) < totalDays(before)
+)
+
+/** check the second age is _after_ the first age */
+export const isAfter = S.curry2(
+  (after: Age, age: Age) => totalDays(age) > totalDays(after)
+)
