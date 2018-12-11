@@ -1,26 +1,47 @@
+import { assert } from 'chai'
 import R from 'ramda'
 import S from 'sanctuary'
 
 import { DAYS_PER_WEEK, MONTHS_PER_YEAR, WEEKS_PER_MONTH } from './constants'
 
-export class Age {
-  public static create(options: Partial<Age> = {}): Age {
-    return R.pipe(
-      // years are 0 indexed
-      passYears(options.year || 0),
-      // months are 1 indexed
-      passMonths((options.month || 1) - 1),
-      // weeks are 1 indexed
-      passWeeks((options.week || 1) - 1),
-      // days are 1 indexed
-      passDays((options.day || 1) - 1),
-    )(new Age())
+export interface IAge {
+  readonly year: number
+  readonly month: number
+  readonly week: number
+  readonly day: number
+}
+
+const baseAge: IAge = {
+  year: 1,
+  month: 1,
+  week: 1,
+  day: 1,
+}
+
+export const createAge = (passedTime: Partial<IAge> = {}): IAge => {
+  type Mod = (age: IAge) => IAge
+  const mods: Mod[] = []
+  if ('year' in passedTime) {
+    assert.isAbove(passedTime.year, 0)
+    mods.push(passYears(passedTime.year))
   }
-  public year: number = 0
-  public month: number = 1
-  public week: number = 1
-  public day: number = 1
-  protected constructor() {}
+  if ('month' in passedTime) {
+    assert.isAbove(passedTime.month, 0)
+    mods.push(passMonths(passedTime.month))
+  }
+  if ('week' in passedTime) {
+    assert.isAbove(passedTime.week, 0)
+    mods.push(passWeeks(passedTime.week))
+  }
+  if ('day' in passedTime) {
+    assert.isAbove(passedTime.day, 0)
+    mods.push(passDays(passedTime.day))
+  }
+  const applyMods = mods.length
+    ? R.pipe(...(mods as [Mod?, Mod?, Mod?, Mod?]))
+    : R.identity
+
+  return applyMods(baseAge)
 }
 
 const addBounded = S.curry2((mod: number, amount: number) =>
@@ -32,12 +53,12 @@ const addBounded = S.curry2((mod: number, amount: number) =>
   ),
 )
 
-export const passYears = (amount: number): ((age: Age) => Age) =>
+export const passYears = (amount: number): ((age: IAge) => IAge) =>
   R.evolve({
     year: R.add(amount),
   })
 
-export const passMonths = (amount: number): ((age: Age) => Age) =>
+export const passMonths = (amount: number): ((age: IAge) => IAge) =>
   R.pipe(
     R.evolve({
       month: addBounded(MONTHS_PER_YEAR)(amount),
@@ -45,7 +66,7 @@ export const passMonths = (amount: number): ((age: Age) => Age) =>
     passYears(Math.floor(amount / MONTHS_PER_YEAR)),
   )
 
-export const passWeeks = (amount: number): ((age: Age) => Age) =>
+export const passWeeks = (amount: number): ((age: IAge) => IAge) =>
   R.pipe(
     R.evolve({
       week: addBounded(WEEKS_PER_MONTH)(amount),
@@ -53,7 +74,7 @@ export const passWeeks = (amount: number): ((age: Age) => Age) =>
     passMonths(Math.floor(amount / WEEKS_PER_MONTH)),
   )
 
-export const passDays = (amount: number): ((age: Age) => Age) =>
+export const passDays = (amount: number): ((age: IAge) => IAge) =>
   R.pipe(
     R.evolve({
       day: addBounded(DAYS_PER_WEEK)(amount),
@@ -62,7 +83,7 @@ export const passDays = (amount: number): ((age: Age) => Age) =>
   )
 
 export const passTime = S.curry3(
-  (amount: number, unit: TimeUnit, age: Age): Age =>
+  (amount: number, unit: TimeUnit, age: IAge): IAge =>
     R.cond([
       [isYear, () => passYears(amount)(age)],
       [isMonth, () => passMonths(amount)(age)],
@@ -88,22 +109,22 @@ export type Week = 'week' | 'weeks'
 export type Day = 'day' | 'days'
 export type TimeUnit = Week | Month | Year | Day
 
-export const totalMonths = (age: Age) => {
+export const totalMonths = (age: IAge) => {
   return age.year * MONTHS_PER_YEAR + age.month
 }
-export const totalWeeks = (age: Age) => {
+export const totalWeeks = (age: IAge) => {
   return totalMonths(age) * WEEKS_PER_MONTH + age.week
 }
-export const totalDays = (age: Age) => {
+export const totalDays = (age: IAge) => {
   return totalWeeks(age) * DAYS_PER_WEEK + age.day
 }
 
 /** check the second age is _before_ the first age */
 export const isBefore = S.curry2(
-  (before: Age, age: Age) => totalDays(age) < totalDays(before),
+  (before: IAge, age: IAge) => totalDays(age) < totalDays(before),
 )
 
 /** check the second age is _after_ the first age */
 export const isAfter = S.curry2(
-  (after: Age, age: Age) => totalDays(age) > totalDays(after),
+  (after: IAge, age: IAge) => totalDays(age) > totalDays(after),
 )
