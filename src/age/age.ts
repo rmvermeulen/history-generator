@@ -1,24 +1,25 @@
 import R from 'ramda'
 import S from 'sanctuary'
+
 import { DAYS_PER_WEEK, MONTHS_PER_YEAR, WEEKS_PER_MONTH } from './constants'
 
 export class Age {
   public static create(options: Partial<Age> = {}): Age {
     return R.pipe(
       // years are 0 indexed
-      passYears(options.years || 0),
+      passYears(options.year || 0),
       // months are 1 indexed
-      passMonths((options.months || 1) - 1),
+      passMonths((options.month || 1) - 1),
       // weeks are 1 indexed
-      passWeeks((options.weeks || 1) - 1),
+      passWeeks((options.week || 1) - 1),
       // days are 1 indexed
-      passDays((options.days || 1) - 1),
+      passDays((options.day || 1) - 1),
     )(new Age())
   }
-  public years: number = 0
-  public months: number = 1
-  public weeks: number = 1
-  public days: number = 1
+  public year: number = 0
+  public month: number = 1
+  public week: number = 1
+  public day: number = 1
   protected constructor() {}
 }
 
@@ -33,13 +34,13 @@ const addBounded = S.curry2((mod: number, amount: number) =>
 
 export const passYears = (amount: number): ((age: Age) => Age) =>
   R.evolve({
-    years: R.add(amount),
+    year: R.add(amount),
   })
 
 export const passMonths = (amount: number): ((age: Age) => Age) =>
   R.pipe(
     R.evolve({
-      months: addBounded(MONTHS_PER_YEAR)(amount),
+      month: addBounded(MONTHS_PER_YEAR)(amount),
     }),
     passYears(Math.floor(amount / MONTHS_PER_YEAR)),
   )
@@ -47,7 +48,7 @@ export const passMonths = (amount: number): ((age: Age) => Age) =>
 export const passWeeks = (amount: number): ((age: Age) => Age) =>
   R.pipe(
     R.evolve({
-      weeks: addBounded(WEEKS_PER_MONTH)(amount),
+      week: addBounded(WEEKS_PER_MONTH)(amount),
     }),
     passMonths(Math.floor(amount / WEEKS_PER_MONTH)),
   )
@@ -55,7 +56,7 @@ export const passWeeks = (amount: number): ((age: Age) => Age) =>
 export const passDays = (amount: number): ((age: Age) => Age) =>
   R.pipe(
     R.evolve({
-      days: addBounded(DAYS_PER_WEEK)(amount),
+      day: addBounded(DAYS_PER_WEEK)(amount),
     }),
     passWeeks(Math.floor(amount / DAYS_PER_WEEK)),
   )
@@ -88,13 +89,13 @@ export type Day = 'day' | 'days'
 export type TimeUnit = Week | Month | Year | Day
 
 export const totalMonths = (age: Age) => {
-  return age.years * MONTHS_PER_YEAR + age.months
+  return age.year * MONTHS_PER_YEAR + age.month
 }
 export const totalWeeks = (age: Age) => {
-  return totalMonths(age) * WEEKS_PER_MONTH + age.weeks
+  return totalMonths(age) * WEEKS_PER_MONTH + age.week
 }
 export const totalDays = (age: Age) => {
-  return totalWeeks(age) * DAYS_PER_WEEK + age.days
+  return totalWeeks(age) * DAYS_PER_WEEK + age.day
 }
 
 /** check the second age is _before_ the first age */

@@ -15,17 +15,17 @@ describe('Serialize age', () => {
       shortStr: '0000/01/1/1',
     },
     {
-      age: Age.create({ years: 1 }),
+      age: Age.create({ year: 1 }),
       longStr: 'Ada, 1 Janumon of 1',
       shortStr: '0001/01/1/1',
     },
     {
-      age: Age.create({ days: 2 }),
+      age: Age.create({ day: 2 }),
       longStr: 'Beda, 2 Janumon of 0',
       shortStr: '0000/01/1/2',
     },
     {
-      age: Age.create({ days: 500 }),
+      age: Age.create({ day: 500 }),
       longStr: 'Beda, 32 Aprimon of 1',
       shortStr: '0001/04/5/2',
     },
