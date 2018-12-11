@@ -3,7 +3,7 @@ import {
   DAYS_PER_WEEK,
   MONTHS_PER_YEAR,
   WEEKS_PER_MONTH,
-} from '../src/age'
+} from '../src/age/age'
 
 describe('Age.create', () => {
   const defaultAge = {

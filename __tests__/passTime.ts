@@ -8,7 +8,7 @@ import {
   passWeeks,
   passYears,
   WEEKS_PER_MONTH,
-} from '../src/age'
+} from '../src/age/age'
 
 const { floor } = Math
 

@@ -1,35 +1,41 @@
 import * as R from 'ramda'
 import { createStore } from 'redux'
 import * as S from 'sanctuary'
-import { Age, passTime, TimeUnit, toAgeString } from './age'
+import { Age, passTime, TimeUnit, toAgeString } from './age/age'
 
-interface State {
+interface IGameState {
   age: Age
 }
 
-const initialState: State = {
-  age: Age.create()
+const initialState: IGameState = {
+  age: Age.create(),
 }
 
-type MyAction = { type: 'PASS TIME'; value: [number, TimeUnit] }
+interface IGameAction {
+  type: 'PASS TIME'
+  value: [number, TimeUnit]
+}
 
 const checkType: <T>(
-  fn: (value: T) => boolean
+  fn: (value: T) => boolean,
 ) => (data: Record<'type', T>) => boolean = R.flip(R.propSatisfies)(
-  'type'
+  'type',
 ) as any
 
-const rootReducer = (state: State = initialState, action: MyAction): State =>
+const rootReducer = (
+  state: IGameState = initialState,
+  action: IGameAction,
+): IGameState =>
   R.cond([
     [
       checkType(S.equals('PASS TIME')),
       ({ value: [amount, unitType] }) =>
         R.evolve({
-          age: passTime(amount)(unitType)
-        })
+          age: passTime(amount)(unitType),
+        }),
     ],
     // do nothing
-    [R.T, () => R.identity]
+    [R.T, () => R.identity],
   ])(action)(state)
 
 const store = createStore(rootReducer)
@@ -38,26 +44,26 @@ const store = createStore(rootReducer)
 
 store.dispatch({
   type: 'PASS TIME',
-  value: [25e5, 'days']
+  value: [25e5, 'days'],
 })
 console.log(toAgeString(store.getState().age))
 store.dispatch({
   type: 'PASS TIME',
-  value: [1238, 'years']
+  value: [1238, 'years'],
 })
 console.log(toAgeString(store.getState().age))
 store.dispatch({
   type: 'PASS TIME',
-  value: [123, 'months']
+  value: [123, 'months'],
 })
 console.log(toAgeString(store.getState().age))
 store.dispatch({
   type: 'PASS TIME',
-  value: [4, 'weeks']
+  value: [4, 'weeks'],
 })
 console.log(toAgeString(store.getState().age))
 store.dispatch({
   type: 'PASS TIME',
-  value: [7463, 'days']
+  value: [7463, 'days'],
 })
 console.log(toAgeString(store.getState().age))

@@ -1,13 +1,13 @@
 import R from 'ramda'
 import {
   Age,
-  fromAgeString,
+  fromLongString,
   fromShortString,
-  toAgeString,
+  toLongString,
   toShortString,
 } from '../src/age'
 
-describe.only('Serialize age', () => {
+describe('Serialize age', () => {
   const fixtures = [
     {
       age: Age.create(),
@@ -27,7 +27,7 @@ describe.only('Serialize age', () => {
     {
       age: Age.create({ days: 500 }),
       longStr: 'Beda, 32 Aprimon of 1',
-      shortStr: '0001/04/6/2',
+      shortStr: '0001/04/5/2',
     },
   ]
 
@@ -35,18 +35,18 @@ describe.only('Serialize age', () => {
     test.each(R.map(R.props(['age', 'longStr']), fixtures))(
       'toAgeString: %o',
       (age, longStr) => {
-        expect(toAgeString(age)).toEqual(longStr)
+        expect(toLongString(age)).toEqual(longStr)
       },
     )
     test.each(R.map(R.props(['longStr', 'age']), fixtures))(
       'fromAgeString: "%s"',
       (longStr, age) => {
-        expect(fromAgeString(longStr)).toEqual(age)
+        expect(fromLongString(longStr)).toMatchObject(age)
       },
     )
     test.each(fixtures)('commutative', ({ age, longStr }) => {
-      expect(fromShortString(toShortString(age))).toEqual(age)
-      expect(toShortString(fromShortString(longStr))).toEqual(longStr)
+      expect(fromLongString(toLongString(age))).toMatchObject(age)
+      expect(toLongString(fromLongString(longStr))).toEqual(longStr)
     })
   })
 

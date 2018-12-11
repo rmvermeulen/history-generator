@@ -1,4 +1,4 @@
-import { Age, isAfter, isBefore } from '../src/age'
+import { Age, isAfter, isBefore } from '../src/age/age'
 
 describe('Compare ages', () => {
   test('isAfter', () => {
