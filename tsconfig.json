@@ -1,6 +1,6 @@
 {
-  "include": ["src/**/*.ts", "src/**/*.tsx", "typings/**/*.d.ts"],
-  "exclude": ["src/**/*.test.ts", "node_modules"],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "__tests__/**/*"],
   "compilerOptions": {
     "target": "ES2017",
     "module": "commonjs",
