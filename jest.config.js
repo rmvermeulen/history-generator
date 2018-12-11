@@ -4,7 +4,8 @@ module.exports = {
   setupTestFrameworkScriptFile: 'jest-extended',
   globals: {
     'ts-jest': {
-      diagnostics: false
-    }
-  }
+      diagnostics: false,
+    },
+  },
+  testPathIgnorePatterns: ['/node_modules/', '.*fixtures.ts'],
 }
