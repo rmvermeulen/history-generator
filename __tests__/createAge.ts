@@ -1,87 +1,87 @@
 import {
-  Age,
+  createAge,
   DAYS_PER_WEEK,
   MONTHS_PER_YEAR,
   WEEKS_PER_MONTH,
-} from '../src/age/age'
+} from '../src/age'
 
-describe('Age.create', () => {
+describe('createAge', () => {
   const defaultAge = {
-    years: 0,
-    months: 1,
-    weeks: 1,
-    days: 1,
+    year: 1,
+    month: 1,
+    week: 1,
+    day: 1,
   }
   it('has a default', () => {
-    expect(Age.create()).toEqual(defaultAge)
+    expect(createAge()).toEqual(defaultAge)
   })
 
-  it('accepts partials', () => {
-    expect(Age.create({ years: 5 })).toEqual({
+  it('can pass time on construction', () => {
+    expect(createAge({ year: 5 })).toEqual({
       ...defaultAge,
-      years: 5,
+      year: 6,
     })
-    expect(Age.create({ months: 5 })).toEqual({
+    expect(createAge({ month: 5 })).toEqual({
       ...defaultAge,
-      months: 5,
+      month: 6,
     })
-    expect(Age.create({ weeks: 5 })).toEqual({
+    expect(createAge({ week: 5 })).toEqual({
       ...defaultAge,
-      weeks: 5,
+      week: 6,
     })
-    expect(Age.create({ days: 5 })).toEqual({
+    expect(createAge({ day: 5 })).toEqual({
       ...defaultAge,
-      days: 5,
+      day: 6,
     })
   })
 
   it('returns a valid age from invalid input', () => {
     const validAgeMatcher = {
-      years: expect.any(Number),
-      months: expect.toBeWithin(1, MONTHS_PER_YEAR + 1),
-      weeks: expect.toBeWithin(1, WEEKS_PER_MONTH + 1),
-      days: expect.toBeWithin(1, DAYS_PER_WEEK + 1),
+      year: expect.any(Number),
+      month: expect.toBeWithin(1, MONTHS_PER_YEAR + 1),
+      week: expect.toBeWithin(1, WEEKS_PER_MONTH + 1),
+      day: expect.toBeWithin(1, DAYS_PER_WEEK + 1),
     }
 
-    const days100 = Age.create({ days: 100 })
-    expect(days100).toEqual(validAgeMatcher)
-    expect(days100).toMatchObject({
-      days: 4,
-      months: 3,
-      weeks: 5,
-      years: 0,
+    const day99 = createAge({ day: 99 })
+    expect(day99).toEqual(validAgeMatcher)
+    expect(day99).toMatchObject({
+      day: 4,
+      month: 3,
+      week: 5,
+      year: 1,
     })
 
-    const weeks100 = Age.create({ weeks: 100 })
-    expect(weeks100).toEqual(validAgeMatcher)
-    expect(weeks100).toMatchObject({
-      days: 1,
-      months: 7,
-      weeks: 4,
-      years: 1,
+    const week99 = createAge({ week: 99 })
+    expect(week99).toEqual(validAgeMatcher)
+    expect(week99).toMatchObject({
+      day: 1,
+      month: 7,
+      week: 4,
+      year: 2,
     })
 
-    const months100 = Age.create({ months: 100 })
-    expect(months100).toEqual(validAgeMatcher)
-    expect(months100).toMatchObject({
-      days: 1,
-      months: 10,
-      weeks: 1,
-      years: 9,
+    const month99 = createAge({ month: 99 })
+    expect(month99).toEqual(validAgeMatcher)
+    expect(month99).toMatchObject({
+      day: 1,
+      month: 10,
+      week: 1,
+      year: 10,
     })
 
-    const overflow = Age.create({
-      years: 456,
-      months: 456,
-      weeks: 456,
-      days: 456,
+    const overflow = createAge({
+      year: 456,
+      month: 456,
+      week: 456,
+      day: 456,
     })
     expect(overflow).toEqual(validAgeMatcher)
     expect(overflow).toEqual({
-      days: 6,
-      months: 3,
-      weeks: 3,
-      years: 509,
+      day: 1,
+      month: 5,
+      week: 5,
+      year: 510,
     })
   })
 })
