@@ -82,33 +82,6 @@ export const passDays = (amount: number): ((age: IAge) => IAge) =>
     passWeeks(Math.floor(amount / DAYS_PER_WEEK)),
   )
 
-export const passTime = S.curry3(
-  (amount: number, unit: TimeUnit, age: IAge): IAge =>
-    R.cond([
-      [isYear, () => passYears(amount)(age)],
-      [isMonth, () => passMonths(amount)(age)],
-      [isWeek, () => passWeeks(amount)(age)],
-      [isDay, () => passDays(amount)(age)],
-    ])(unit),
-)
-
-export const isYear: (value: TimeUnit) => value is Year = S.test(
-  /^years?$/,
-) as any
-export const isMonth: (value: TimeUnit) => value is Month = S.test(
-  /^months?$/,
-) as any
-export const isWeek: (value: TimeUnit) => value is Week = S.test(
-  /^weeks?$/,
-) as any
-export const isDay: (value: TimeUnit) => value is Day = S.test(/^days?$/) as any
-
-export type Year = 'year' | 'years'
-export type Month = 'month' | 'months'
-export type Week = 'week' | 'weeks'
-export type Day = 'day' | 'days'
-export type TimeUnit = Week | Month | Year | Day
-
 export const totalMonths = (age: IAge) => {
   return age.year * MONTHS_PER_YEAR + age.month
 }
