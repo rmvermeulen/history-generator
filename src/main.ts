@@ -43,9 +43,10 @@ const store = createStore(rootReducer)
 
 // do something I guess
 
+console.log(toLongString(store.getState().age))
 store.dispatch({
   type: 'PASS TIME',
-  value: [25e5, 'days'],
+  value: [25e3, 'days'],
 })
 console.log(toLongString(store.getState().age))
 store.dispatch({
