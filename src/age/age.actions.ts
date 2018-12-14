@@ -1,14 +1,14 @@
 import { Action } from 'redux'
 
-import { IAge } from './age'
+import { Age } from './age'
 
 export const PASS_TIME = 'PASS_TIME'
 
-export type AgeAction = IPassTimeAction
-export interface IPassTimeAction extends Action<typeof PASS_TIME> {
-  value: Partial<IAge>
+export type AgeAction = PassTimeAction
+export interface PassTimeAction extends Action<typeof PASS_TIME> {
+  value: Partial<Age>
 }
-export const passTime = (value: Partial<IAge>): IPassTimeAction => ({
+export const passTime = (value: Partial<Age>): PassTimeAction => ({
   type: PASS_TIME,
   value,
 })

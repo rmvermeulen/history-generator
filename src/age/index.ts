@@ -1,4 +1,6 @@
+export * from './age.actions'
+export * from './age.reducer'
 export * from './age'
 export * from './constants'
-export * from './serialize'
 export * from './passTime'
+export * from './serialize'

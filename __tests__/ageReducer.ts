@@ -6,6 +6,11 @@ import { passTime } from '../src/age/age.actions'
 import { reducer } from '../src/age/age.reducer'
 
 describe('Age reducer', () => {
+  it('returns a valid state', () => {
+    expect((reducer as any)(undefined, { type: null })).toContainKeys(
+      Object.keys(createAge()),
+    )
+  })
   it('returns equivalent state on irrelevant action', () => {
     const state = createAge()
     const action = {

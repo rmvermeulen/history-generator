@@ -3,24 +3,24 @@ import R from 'ramda'
 import S from 'sanctuary'
 
 import { DAYS_PER_WEEK, MONTHS_PER_YEAR, WEEKS_PER_MONTH } from './constants'
-import { passDays, passMonths, passWeeks, passYears } from './passTime';
+import { passDays, passMonths, passWeeks, passYears } from './passTime'
 
-export interface IAge {
+export interface Age {
   readonly year: number
   readonly month: number
   readonly week: number
   readonly day: number
 }
 
-const baseAge: IAge = {
+const baseAge: Age = {
   year: 1,
   month: 1,
   week: 1,
   day: 1,
 }
 
-export const createAge = (passedTime: Partial<IAge> = {}): IAge => {
-  type Mod = (age: IAge) => IAge
+export const createAge = (passedTime: Partial<Age> = {}): Age => {
+  type Mod = (age: Age) => Age
   const mods: Mod[] = []
   if ('year' in passedTime) {
     assert.isAbove(passedTime.year, 0)
@@ -45,24 +45,22 @@ export const createAge = (passedTime: Partial<IAge> = {}): IAge => {
   return applyMods(baseAge)
 }
 
-
-
-export const totalMonths = (age: IAge) => {
+export const totalMonths = (age: Age) => {
   return age.year * MONTHS_PER_YEAR + age.month
 }
-export const totalWeeks = (age: IAge) => {
+export const totalWeeks = (age: Age) => {
   return totalMonths(age) * WEEKS_PER_MONTH + age.week
 }
-export const totalDays = (age: IAge) => {
+export const totalDays = (age: Age) => {
   return totalWeeks(age) * DAYS_PER_WEEK + age.day
 }
 
 /** check the second age is _before_ the first age */
 export const isBefore = S.curry2(
-  (before: IAge, age: IAge) => totalDays(age) < totalDays(before),
+  (before: Age, age: Age) => totalDays(age) < totalDays(before),
 )
 
 /** check the second age is _after_ the first age */
 export const isAfter = S.curry2(
-  (after: IAge, age: IAge) => totalDays(age) > totalDays(after),
+  (after: Age, age: Age) => totalDays(age) > totalDays(after),
 )
