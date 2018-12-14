@@ -1,4 +1,4 @@
-import { createAge } from '../src/age/age'
+import { createAge } from '../../src/age/age'
 
 export const fixtures = [
   {

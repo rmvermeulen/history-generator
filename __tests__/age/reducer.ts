@@ -1,6 +1,6 @@
-import { createAge } from '../src/age'
-import { passTime } from '../src/age/age.actions'
-import { reducer } from '../src/age/age.reducer'
+import { createAge } from '../../src/age'
+import { passTime } from '../../src/age/age.actions'
+import { reducer } from '../../src/age/age.reducer'
 
 describe('Age reducer', () => {
   it('returns a valid state', () => {

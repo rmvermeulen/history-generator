@@ -9,7 +9,7 @@ import {
   passWeeks,
   passYears,
   WEEKS_PER_MONTH,
-} from '../src/age/'
+} from '../../src/age/'
 
 const { floor } = Math
 
