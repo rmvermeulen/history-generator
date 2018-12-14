@@ -7,8 +7,8 @@
   "main": "index.js",
   "scripts": {
     "format": "prettier --write",
-    "lint": "tslint -p tsconfig.json",
-    "lint:test": "tslint -p tsconfig.test.json",
+    "lint": "tslint -p tsconfig.json -t stylish",
+    "lint:test": "yarn lint -p __tests__/tsconfig.json",
     "start": "node -r ts-node/register src/main.ts",
     "test": "jest"
   },

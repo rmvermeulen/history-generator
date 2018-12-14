@@ -1,6 +1,3 @@
-import R from 'ramda'
-import { Action } from 'redux'
-
 import { createAge } from '../src/age'
 import { passTime } from '../src/age/age.actions'
 import { reducer } from '../src/age/age.reducer'
