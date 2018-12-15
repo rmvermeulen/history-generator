@@ -1,16 +1,21 @@
 import { combineReducers, createStore } from 'redux'
 
-import { Age, reducer as ageReducer, toLongString } from './age'
+import { HDate, reducer as ageReducer, toLongString } from './h-date'
+import { Place, worldReducer } from './world'
 
 interface GameState {
-  age: Age
+  age: HDate
+  world: Place
 }
 
 const rootReducer = combineReducers<GameState>({
   age: ageReducer,
+  world: worldReducer as any,
 })
 
-const store = createStore(rootReducer)
+const store = createStore(rootReducer, {
+  world: { name: 'world' },
+})
 
 // do something I guess
 

@@ -5,7 +5,7 @@ import {
   fromShortString,
   toLongString,
   toShortString,
-} from '../../src/age'
+} from '../../src/h-date'
 
 import { fixtures } from './serialize.fixtures'
 

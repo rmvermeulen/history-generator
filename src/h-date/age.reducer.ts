@@ -1,10 +1,11 @@
 import R from 'ramda'
 
-import { Age, createAge } from './age'
+import { Duration } from '.'
 import { AgeAction, PASS_TIME } from './age.actions'
+import { createDate, HDate } from './HDate'
 import { passDays, passMonths, passWeeks, passYears } from './passTime'
 
-type Modifier = (age: Age) => Age
+type Modifier = (age: HDate) => HDate
 interface ModMap {
   year: Modifier
   month: Modifier
@@ -12,7 +13,7 @@ interface ModMap {
   days: Modifier
 }
 
-const passTime = R.pipe<Partial<Age>, Partial<ModMap>, Modifier[], Modifier>(
+const passTime = R.pipe<Duration, Partial<ModMap>, Modifier[], Modifier>(
   // create a function from each value
   R.evolve({
     year: passYears,
@@ -25,7 +26,10 @@ const passTime = R.pipe<Partial<Age>, Partial<ModMap>, Modifier[], Modifier>(
   // create a pipe of them
   R.apply(R.pipe) as (fns: Modifier[]) => Modifier,
 )
-export const reducer = (state: Age = createAge(), action: AgeAction): Age => {
+export const reducer = (
+  state: HDate = createDate(),
+  action: AgeAction,
+): HDate => {
   switch (action.type) {
     case PASS_TIME: {
       const updateState = passTime(action.value)

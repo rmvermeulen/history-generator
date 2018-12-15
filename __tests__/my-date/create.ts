@@ -1,11 +1,17 @@
 import {
-  createAge,
+  createDate,
   DAYS_PER_WEEK,
   MONTHS_PER_YEAR,
   WEEKS_PER_MONTH,
-} from '../../src/age'
+} from '../../src/h-date'
 
-describe('createAge', () => {
+describe('createDate', () => {
+  test('constants', () => {
+    expect(DAYS_PER_WEEK).toBeDefined()
+    expect(MONTHS_PER_YEAR).toBeDefined()
+    expect(DAYS_PER_WEEK).toBeDefined()
+  })
+
   const defaultAge = {
     year: 1,
     month: 1,
@@ -13,23 +19,23 @@ describe('createAge', () => {
     day: 1,
   }
   it('has a default', () => {
-    expect(createAge()).toEqual(defaultAge)
+    expect(createDate()).toEqual(defaultAge)
   })
 
   it('can pass time on construction', () => {
-    expect(createAge({ year: 5 })).toEqual({
+    expect(createDate({ years: 5 })).toEqual({
       ...defaultAge,
       year: 6,
     })
-    expect(createAge({ month: 5 })).toEqual({
+    expect(createDate({ months: 5 })).toEqual({
       ...defaultAge,
       month: 6,
     })
-    expect(createAge({ week: 5 })).toEqual({
+    expect(createDate({ weeks: 5 })).toEqual({
       ...defaultAge,
       week: 6,
     })
-    expect(createAge({ day: 5 })).toEqual({
+    expect(createDate({ days: 5 })).toEqual({
       ...defaultAge,
       day: 6,
     })
@@ -43,7 +49,7 @@ describe('createAge', () => {
       day: expect.toBeWithin(1, DAYS_PER_WEEK + 1),
     }
 
-    const day99 = createAge({ day: 99 })
+    const day99 = createDate({ days: 99 })
     expect(day99).toEqual(validAgeMatcher)
     expect(day99).toMatchObject({
       day: 4,
@@ -52,7 +58,7 @@ describe('createAge', () => {
       year: 1,
     })
 
-    const week99 = createAge({ week: 99 })
+    const week99 = createDate({ weeks: 99 })
     expect(week99).toEqual(validAgeMatcher)
     expect(week99).toMatchObject({
       day: 1,
@@ -61,7 +67,7 @@ describe('createAge', () => {
       year: 2,
     })
 
-    const month99 = createAge({ month: 99 })
+    const month99 = createDate({ months: 99 })
     expect(month99).toEqual(validAgeMatcher)
     expect(month99).toMatchObject({
       day: 1,
@@ -70,7 +76,7 @@ describe('createAge', () => {
       year: 10,
     })
 
-    const overflow = createAge({
+    const overflow = createDate({
       year: 456,
       month: 456,
       week: 456,
